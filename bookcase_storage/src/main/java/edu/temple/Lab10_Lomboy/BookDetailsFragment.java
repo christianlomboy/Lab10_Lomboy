@@ -221,7 +221,7 @@ public class BookDetailsFragment extends Fragment {
             mIcon11 = Bitmap.createScaledBitmap(
                     mIcon11, width, height, false);
 
-            return Bitmap.createScaledBitmap(mIcon11, 260, 380, false);
+            return Bitmap.createScaledBitmap(mIcon11, 160, 280, false);
         }
 
         protected void onPostExecute(Bitmap result) {
