@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
@@ -22,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.Objects;
 
@@ -34,12 +36,14 @@ public class BookDetailsFragment extends Fragment {
     Button btnPlay;
     Button btnPause;
     Button btnStop;
+    Button btnStorage;
     SeekBar sbProgress;
     View view;
 
     Book book;
 
     OnCallbackReceivedList mCallback;
+
 
     @SuppressLint("HandlerLeak")
     Handler mHandler = new Handler() {
@@ -90,9 +94,15 @@ public class BookDetailsFragment extends Fragment {
 
         setBookDetails();
 
+
+
+
         btnPlay = view.findViewById(R.id.btn_play);
         btnPause = view.findViewById(R.id.btn_pause);
         btnStop = view.findViewById(R.id.btn_stop);
+        btnStorage = view.findViewById(R.id.btn_storage);
+        // TODO set text depending on if book exists in storage
+
         sbProgress = view.findViewById(R.id.sb_progress);
 
         btnPlay.setOnClickListener(new View.OnClickListener() {
@@ -131,6 +141,13 @@ public class BookDetailsFragment extends Fragment {
                         mCallback.bookProg(mHandler);
                     }
                 });
+            }
+        });
+
+        btnStorage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO download or delete book
             }
         });
 
