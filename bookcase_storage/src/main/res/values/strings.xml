@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">BookCase Storage</string>
+    <string name="search">Search…</string>
+    <string name="play">Play</string>
+    <string name="pause">Pause</string>
+    <string name="pauseResume">Pause/Resume</string>
+    <string name="stop">Stop</string>
+    <string name="book_image">book image</string>
+
+    <string-array name="book_titles">
+        <item>The Stranger</item>
+        <item>Fear and Loathing in Las Vegas</item>
+        <item>Pride and Prejudice</item>
+        <item>1984</item>
+        <item>Catch-22</item>
+        <item>Les Misérables</item>
+        <item>Fahrenheit 451</item>
+        <item>David Copperfield</item>
+        <item>The Grapes of Wrath</item>
+        <item>The Hobbit or There and Back Again</item>
+    </string-array>
+
+</resources>

@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: artifacts:audiobook-player:unspecified@jar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7401be94a3b1813349df74a01400f726/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7401be94a3b1813349df74a01400f726/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
