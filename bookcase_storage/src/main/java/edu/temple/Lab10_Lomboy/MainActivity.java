@@ -8,12 +8,14 @@ import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,6 +24,7 @@ import android.widget.Toast;
 import org.json.JSONArray;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
@@ -44,6 +47,9 @@ public class MainActivity extends AppCompatActivity
 
     AudiobookService.MediaControlBinder mcb;
     GetBooksTask task;
+
+    private static String dirName = "bookstorage";
+    File storageDir;
 
     ServiceConnection connection = new ServiceConnection() {
         @Override
@@ -75,7 +81,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        System.out.println("     ACTIVITY DESTROYED");
     }
 
     @Override
@@ -102,6 +107,15 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        storageDir = new File(Environment.getExternalStorageDirectory() + File.separator + Environment.DIRECTORY_DOWNLOADS, dirName);
+
+        if (storageDir.exists() && storageDir.isDirectory()) {
+            Log.d("Storage directory found: ", storageDir.getAbsolutePath());
+        } else {
+            storageDir.mkdir();
+            Log.d("Storage directory not found, creating...", storageDir.getAbsolutePath());
+        }
 
         pager = findViewById(R.id.view_pager);
         task = new GetBooksTask();
