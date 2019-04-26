@@ -36,8 +36,7 @@
     </LinearLayout>
 
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
         android:id="@+id/land_detail"
         android:orientation="vertical"
         android:layout_width="0dp"
