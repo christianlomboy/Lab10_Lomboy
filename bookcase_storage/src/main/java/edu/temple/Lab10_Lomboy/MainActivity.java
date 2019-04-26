@@ -69,6 +69,13 @@ public class MainActivity extends AppCompatActivity
     protected void onStop() {
         super.onStop();
         unbindService(connection);
+        this.finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        System.out.println("     ACTIVITY DESTROYED");
     }
 
     @Override
@@ -117,7 +124,6 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         });
-
     }
 
 
