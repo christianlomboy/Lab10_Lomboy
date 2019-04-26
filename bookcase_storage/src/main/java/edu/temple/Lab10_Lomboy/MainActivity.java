@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity
     AudiobookService.MediaControlBinder mcb;
     GetBooksTask task;
 
-    private static String dirName = "bookstorage";
+    public static String dirName = "bookstorage";
     File storageDir;
 
     ServiceConnection connection = new ServiceConnection() {
