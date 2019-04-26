@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
@@ -22,8 +23,16 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Objects;
+
+import static edu.temple.Lab10_Lomboy.MainActivity.dirName;
 
 public class BookDetailsFragment extends Fragment {
 
@@ -93,8 +102,6 @@ public class BookDetailsFragment extends Fragment {
         setBookDetails();
 
 
-
-
         btnPlay = view.findViewById(R.id.btn_play);
         btnPause = view.findViewById(R.id.btn_pause);
         btnStop = view.findViewById(R.id.btn_stop);
@@ -152,6 +159,14 @@ public class BookDetailsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // TODO download or delete book
+
+                if (btnStorage.getText() == "Download") {
+                    // download book
+                    new DownloadBookTask().execute(book.getDlUrlString());
+                } else {
+                    // delete book
+                }
+
             }
         });
 
@@ -215,14 +230,19 @@ public class BookDetailsFragment extends Fragment {
     }
 
 
-//    storageDir = new File(Environment.getExternalStorageDirectory() + File.separator + Environment.DIRECTORY_DOWNLOADS, dirName);
-//
-//        if (storageDir.exists() && storageDir.isDirectory()) {
-//        Log.d("Storage directory found: ", storageDir.getAbsolutePath());
-//    } else {
-//        storageDir.mkdir();
-//        Log.d("Storage directory not found, creating...", storageDir.getAbsolutePath());
-//    }
+    public void downloadBook() {
+        File bookFile = new File(Environment.getExternalStorageDirectory()
+                + File.separator
+                + Environment.DIRECTORY_DOWNLOADS, dirName + '/' + book.getId());
+
+    }
+
+    public void deleteBook() {
+        File bookFile = new File(Environment.getExternalStorageDirectory()
+                + File.separator
+                + Environment.DIRECTORY_DOWNLOADS, dirName + '/' + book.getId());
+        bookFile.delete();
+    }
 
     @SuppressLint("StaticFieldLeak")
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
@@ -259,4 +279,42 @@ public class BookDetailsFragment extends Fragment {
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
+    private class DownloadBookTask extends AsyncTask<String, Integer, String> {
+        @Override
+        protected String doInBackground(String... urlParams) {
+            int count;
+            try {
+                URL url = new URL(urlParams[0]);
+                URLConnection connection = url.openConnection();
+                connection.connect();
+                int fileLength = connection.getContentLength();
+
+                // downlod the book file
+                InputStream input = new BufferedInputStream(url.openStream());
+                OutputStream output = new FileOutputStream(Environment.getExternalStorageDirectory()
+                        + File.separator
+                        + Environment.DIRECTORY_DOWNLOADS + '/' + dirName + '/' + (book.getId() + 1) + ".mp3");
+
+                byte[] data = new byte[1024];
+
+                long total = 0;
+
+                while ((count = input.read(data)) != -1) {
+                    total += count;
+                    // publishing the progress....
+                    publishProgress((int) (total * 100 / fileLength));
+                    output.write(data, 0, count);
+                }
+                output.flush();
+                output.close();
+                input.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+    }
 }
