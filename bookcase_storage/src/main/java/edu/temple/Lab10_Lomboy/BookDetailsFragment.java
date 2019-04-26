@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
@@ -23,7 +22,6 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import java.io.File;
 import java.io.InputStream;
 import java.util.Objects;
 
@@ -102,6 +100,12 @@ public class BookDetailsFragment extends Fragment {
         btnStop = view.findViewById(R.id.btn_stop);
         btnStorage = view.findViewById(R.id.btn_storage);
         // TODO set text depending on if book exists in storage
+        if (!book.isInStorage()) {
+            btnStorage.setText("Download");
+        } else {
+            btnStorage.setText("Delete");
+        }
+        btnStorage.setVisibility(View.VISIBLE);
 
         sbProgress = view.findViewById(R.id.sb_progress);
 
@@ -210,6 +214,15 @@ public class BookDetailsFragment extends Fragment {
         tvPublished.setText(book.getPublished());
     }
 
+
+//    storageDir = new File(Environment.getExternalStorageDirectory() + File.separator + Environment.DIRECTORY_DOWNLOADS, dirName);
+//
+//        if (storageDir.exists() && storageDir.isDirectory()) {
+//        Log.d("Storage directory found: ", storageDir.getAbsolutePath());
+//    } else {
+//        storageDir.mkdir();
+//        Log.d("Storage directory not found, creating...", storageDir.getAbsolutePath());
+//    }
 
     @SuppressLint("StaticFieldLeak")
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {

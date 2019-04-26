@@ -1,10 +1,15 @@
 package edu.temple.Lab10_Lomboy;
 
+import android.os.Environment;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.File;
+
+import static edu.temple.Lab10_Lomboy.MainActivity.dirName;
 
 public class Book implements Parcelable {
 
@@ -79,6 +84,13 @@ public class Book implements Parcelable {
 
     public int getDuration() {
         return duration;
+    }
+
+    public Boolean isInStorage() {
+        File bookFile = new File(Environment.getExternalStorageDirectory()
+                + File.separator
+                + Environment.DIRECTORY_DOWNLOADS, dirName + '/' + this.id);
+        return bookFile.exists();
     }
 
     @Override
