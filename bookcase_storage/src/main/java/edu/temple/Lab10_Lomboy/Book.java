@@ -86,11 +86,28 @@ public class Book implements Parcelable {
         return duration;
     }
 
-    public Boolean isInStorage() {
+    Boolean isInStorage() {
         File bookFile = new File(Environment.getExternalStorageDirectory()
                 + File.separator
-                + Environment.DIRECTORY_DOWNLOADS, dirName + '/' + this.id);
+                + Environment.DIRECTORY_DOWNLOADS, dirName + '/' + (this.id + 1) + ".mp3");
         return bookFile.exists();
+    }
+
+    public String getPath() {
+        String path;
+        if (this.isInStorage()) {
+            File bookFile = new File(Environment.getExternalStorageDirectory()
+                    + File.separator
+                    + Environment.DIRECTORY_DOWNLOADS, dirName + '/' + (this.id + 1) + ".mp3");
+            path = bookFile.getPath();
+        } else {
+            path = null;
+        }
+        return path;
+    }
+
+    public String getDlUrlString() {
+        return "https://kamorris.com/lab/audlib/download.php?id=" + (this.getId() + 1);
     }
 
     @Override
