@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.res.Configuration;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -171,6 +173,7 @@ public class MainActivity extends AppCompatActivity
         pager.setAdapter(viewPagerAdapter);
     }
 
+
     @Override
     public void displayBook(String title) {
         int bookId = 0;
@@ -185,7 +188,14 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void playBook(int id) {
-        mcb.play(id + 1);
+        if (books.get(id).isInStorage()) {
+            File book = new File(books.get(id).getPath());
+            mcb.play(book);
+            System.out.println("Book found in storage");
+        } else {
+            mcb.play(id + 1);
+            System.out.println("Streaming book");
+        }
     }
 
     @Override
