@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -101,7 +102,6 @@ public class BookDetailsFragment extends Fragment {
 
         setBookDetails();
 
-
         btnPlay = view.findViewById(R.id.btn_play);
         btnPause = view.findViewById(R.id.btn_pause);
         btnStop = view.findViewById(R.id.btn_stop);
@@ -158,13 +158,17 @@ public class BookDetailsFragment extends Fragment {
         btnStorage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO download or delete book
-
                 if (btnStorage.getText() == "Download") {
                     // download book
                     new DownloadBookTask().execute(book.getDlUrlString());
                 } else {
                     // delete book
+                    File delFile = new File(Environment.getExternalStorageDirectory()
+                            + File.separator
+                            + Environment.DIRECTORY_DOWNLOADS, dirName + '/' + (book.getId() + 1) + ".mp3");
+                    delFile.delete();
+                    Toast.makeText(getContext(), "Book deleted.", Toast.LENGTH_SHORT).show();
+                    btnStorage.setText("Download");
                 }
 
             }
@@ -316,5 +320,11 @@ public class BookDetailsFragment extends Fragment {
             return null;
         }
 
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            Toast.makeText(getContext(), "Book downloaded.", Toast.LENGTH_SHORT).show();
+            btnStorage.setText("Delete");
+        }
     }
 }
