@@ -71,6 +71,8 @@ public class BookDetailsFragment extends Fragment {
     public interface OnCallbackReceivedList {
         void playBook(int id);
 
+        void playBook(int id, int position);
+
         void pauseBook();
 
         void stopBook();
@@ -124,7 +126,11 @@ public class BookDetailsFragment extends Fragment {
         btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCallback.playBook(book.getId());
+                if (progress > 0) {
+                    mCallback.playBook(book.getId(), progress - 10);
+                } else {
+                    mCallback.playBook(book.getId());
+                }
                 sbProgress.post(new Runnable() {
                     @Override
                     public void run() {
@@ -206,6 +212,7 @@ public class BookDetailsFragment extends Fragment {
         detailEditor = detailPrefs.edit();
         restoreFragProg();
         sbProgress.setProgress(progress);
+        mCallback.setBookProg(progress);
 
         return view;
     }
@@ -233,6 +240,13 @@ public class BookDetailsFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
+        saveFragProg();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mCallback.pauseBook();
         saveFragProg();
     }
 

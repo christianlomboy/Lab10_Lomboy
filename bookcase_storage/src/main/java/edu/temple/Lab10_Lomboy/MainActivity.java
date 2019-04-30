@@ -221,6 +221,18 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void playBook(int id, int position) {
+        if (books.get(id).isInStorage()) {
+            File book = new File(books.get(id).getPath());
+            mcb.play(book, position);
+            System.out.println("Book found in storage");
+        } else {
+            mcb.play(id + 1, position);
+            System.out.println("Streaming book");
+        }
+    }
+
+    @Override
     public void pauseBook() {
         mcb.pause();
     }
