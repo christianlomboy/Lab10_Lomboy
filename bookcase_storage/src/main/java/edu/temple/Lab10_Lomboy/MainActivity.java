@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -52,6 +53,11 @@ public class MainActivity extends AppCompatActivity
 
     public static String dirName = "bookstorage";
     File storageDir;
+
+    SharedPreferences mainPrefs;
+    SharedPreferences.Editor mainEditor;
+    public static String booksKey = "books";
+    String booksQuery;
 
     ServiceConnection connection = new ServiceConnection() {
         @Override
@@ -120,23 +126,39 @@ public class MainActivity extends AppCompatActivity
         }
 
         pager = findViewById(R.id.view_pager);
+
+        mainPrefs = getSharedPreferences(booksKey, Context.MODE_PRIVATE);
+        booksQuery = mainPrefs.getString(booksKey, null);
+        mainEditor = mainPrefs.edit();
+
         task = new GetBooksTask();
-        task.execute("https://kamorris.com/lab/audlib/booksearch.php");
+        if (booksQuery != null) {
+            task.execute(booksQuery);
+        } else {
+            task.execute("https://kamorris.com/lab/audlib/booksearch.php");
+        }
 
         etSearch = findViewById(R.id.et_search);
         btnSearch = findViewById(R.id.btn_search);
+
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (etSearch.getText().toString().equals("")) {
                     GetBooksTask booksTask = new GetBooksTask();
-                    booksTask.execute("https://kamorris.com/lab/audlib/booksearch.php");
+                    booksQuery = "https://kamorris.com/lab/audlib/booksearch.php";
+                    booksTask.execute(booksQuery);
+                    mainEditor.putString(booksKey, booksQuery);
+                    mainEditor.apply();
                     Toast toast = Toast.makeText(getApplicationContext(), "Please enter a search query", Toast.LENGTH_SHORT);
                     toast.show();
                 } else {
                     String query = etSearch.getText().toString();
                     GetBooksTask booksTask = new GetBooksTask();
-                    booksTask.execute("https://kamorris.com/lab/audlib/booksearch.php?search=" + query);
+                    booksQuery = "https://kamorris.com/lab/audlib/booksearch.php?search=" + query;
+                    booksTask.execute(booksQuery);
+                    mainEditor.putString(booksKey, booksQuery);
+                    mainEditor.apply();
                 }
             }
         });
@@ -258,7 +280,6 @@ public class MainActivity extends AppCompatActivity
         protected void onPostExecute(ArrayList<Book> books) {
             initList();
             initDetails(books);
-
         }
     }
 

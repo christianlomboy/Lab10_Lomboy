@@ -53,8 +53,8 @@ public class BookDetailsFragment extends Fragment {
 
     OnCallbackReceivedList mCallback;
 
-    SharedPreferences prefs;
-    SharedPreferences.Editor editor;
+    SharedPreferences detailPrefs;
+    SharedPreferences.Editor detailEditor;
 
     int progress;
 
@@ -202,8 +202,8 @@ public class BookDetailsFragment extends Fragment {
             }
         });
 
-        prefs = getActivity().getPreferences(Context.MODE_PRIVATE);
-        editor = prefs.edit();
+        detailPrefs = getActivity().getPreferences(Context.MODE_PRIVATE);
+        detailEditor = detailPrefs.edit();
         restoreFragProg();
         sbProgress.setProgress(progress);
 
@@ -251,14 +251,14 @@ public class BookDetailsFragment extends Fragment {
     public void restoreFragProg() {
         int id = book.getId();
         String key = "book" + id;
-        progress = prefs.getInt(key, 0);
+        progress = detailPrefs.getInt(key, 0);
     }
 
     public void saveFragProg() {
         int id = book.getId();
         String key = "book" + id;
-        editor.putInt(key, progress);
-        editor.commit();
+        detailEditor.putInt(key, progress);
+        detailEditor.commit();
     }
 
 
