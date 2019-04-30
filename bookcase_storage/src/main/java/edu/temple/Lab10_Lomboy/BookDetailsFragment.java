@@ -3,6 +3,7 @@ package edu.temple.Lab10_Lomboy;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -52,12 +53,17 @@ public class BookDetailsFragment extends Fragment {
 
     OnCallbackReceivedList mCallback;
 
+    SharedPreferences prefs;
+    SharedPreferences.Editor editor;
+
+    int progress;
 
     @SuppressLint("HandlerLeak")
     Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             int pos = msg.what;
+            progress = pos;
             sbProgress.setProgress(pos);
         }
     };
@@ -93,7 +99,6 @@ public class BookDetailsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_book_details, container, false);
-
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
@@ -193,10 +198,14 @@ public class BookDetailsFragment extends Fragment {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
+                progress = seekBar.getProgress();
             }
         });
 
+        prefs = getActivity().getPreferences(Context.MODE_PRIVATE);
+        editor = prefs.edit();
+        restoreFragProg();
+        sbProgress.setProgress(progress);
 
         return view;
     }
@@ -221,6 +230,12 @@ public class BookDetailsFragment extends Fragment {
 
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        saveFragProg();
+    }
+
     public void setBookDetails() {
         ivCover = view.findViewById(R.id.iv_cover);
         new DownloadImageTask((ImageView) view.findViewById(R.id.iv_cover))
@@ -233,20 +248,33 @@ public class BookDetailsFragment extends Fragment {
         tvPublished.setText(book.getPublished());
     }
 
-
-    public void downloadBook() {
-        File bookFile = new File(Environment.getExternalStorageDirectory()
-                + File.separator
-                + Environment.DIRECTORY_DOWNLOADS, dirName + '/' + book.getId());
-
+    public void restoreFragProg() {
+        int id = book.getId();
+        String key = "book" + id;
+        progress = prefs.getInt(key, 0);
     }
 
-    public void deleteBook() {
-        File bookFile = new File(Environment.getExternalStorageDirectory()
-                + File.separator
-                + Environment.DIRECTORY_DOWNLOADS, dirName + '/' + book.getId());
-        bookFile.delete();
+    public void saveFragProg() {
+        int id = book.getId();
+        String key = "book" + id;
+        editor.putInt(key, progress);
+        editor.commit();
     }
+
+
+//    public void downloadBook() {
+//        File bookFile = new File(Environment.getExternalStorageDirectory()
+//                + File.separator
+//                + Environment.DIRECTORY_DOWNLOADS, dirName + '/' + book.getId());
+//
+//    }
+//
+//    public void deleteBook() {
+//        File bookFile = new File(Environment.getExternalStorageDirectory()
+//                + File.separator
+//                + Environment.DIRECTORY_DOWNLOADS, dirName + '/' + book.getId());
+//        bookFile.delete();
+//    }
 
     @SuppressLint("StaticFieldLeak")
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
