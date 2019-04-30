@@ -111,6 +111,23 @@ public class Book implements Parcelable {
     }
 
     @Override
+    public String toString() {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("id", id);
+            obj.put("title", title);
+            obj.put("author", author);
+            obj.put("published", published);
+            obj.put("cover_url", coverURL);
+            obj.put("duration", duration);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return obj.toString();
+    }
+
+
+    @Override
     public int describeContents() {
         return 0;
     }
