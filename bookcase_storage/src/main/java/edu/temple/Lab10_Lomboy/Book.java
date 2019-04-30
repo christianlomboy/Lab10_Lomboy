@@ -63,7 +63,7 @@ public class Book implements Parcelable {
     };
 
     public int getId() {
-        return id;
+        return id + 1;
     }
 
     String getTitle() {
